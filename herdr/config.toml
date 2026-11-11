@@ -1,0 +1,39 @@
+onboarding = false
+
+[ui]
+# 입력을 기다리는 에이전트를 사이드바 위로
+agent_panel_sort = "priority"
+# 창 테두리에 에이전트 이름 표시
+show_agent_labels_on_pane_borders = true
+
+# herdr 재시작 후 Claude 창을 원래 세션으로 이어가기 (Claude 연동 훅 필요)
+[session]
+resume_agents_on_restore = true
+
+[experimental]
+pane_history = true
+# prefix를 누르면 입력기를 영문으로 전환 (한글 상태에서도 단축키 동작)
+switch_ascii_input_source_in_prefix = true
+# Claude 창에서 한글 조합 중에도 커서 표시
+reveal_hidden_cursor_for_cjk_ime = true
+cjk_ime_agents = ["claude"]
+
+# 작업 완료·입력 대기 알림을 macOS 알림 센터로
+[ui.toast]
+delivery = "system"
+delay_seconds = 1
+
+# 사이드바 agents 줄: 1줄 = 상태 · 창 이름 · 탭, 2줄 = 에이전트 · 워크스페이스
+# 창 이름은 Cmd+B → Shift+p 로 붙인다 (없으면 생략됨)
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "pane", "tab"],
+  ["agent", "workspace"],
+]
+
+# 마지막으로 배너 알림을 보낸 Claude 창으로 이동 (Ghostty에서 Cmd+J = prefix+j)
+# 기록 파일은 ~/.claude/hooks/herdr-banner-notify.sh 가 남긴다.
+[[keys.command]]
+key = "prefix+j"
+type = "shell"
+command = "p=$(cat ~/.claude/hooks/herdr-last-notified 2>/dev/null); [ -n \"$p\" ] && herdr agent focus \"$p\""

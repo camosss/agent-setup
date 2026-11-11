@@ -1,0 +1,83 @@
+# Ghostty / cmux 공용 설정 — 단일 소스
+#
+# cmux는 ghostty를 임베드하고 ghostty의 기본 config 경로를 그대로 읽는다.
+# 이 파일 하나만 두면 Ghostty.app과 cmux가 같은 설정을 쓴다.
+# (이전에는 ~/Library/Application Support/com.mitchellh.ghostty/config 에도
+#  설정이 있어 두 파일이 병합되고 있었다. 그쪽은 비웠고 .bak 으로 백업해 둠.)
+#
+# 참고: 값 확인은 `ghostty +show-config`, 문법 검사는 `ghostty +validate-config`.
+
+# ── 테마 / 색 ──────────────────────────────────────────────
+# 다크 모드. (cmux의 `theme = light:X,dark:Y` 분기 문법은 버그로 라이트 쪽만
+#  적용되는 사례가 있어 단일 테마로 고정한다.)
+theme = Catppuccin Mocha
+
+# 테마 기본값을 그대로 쓴다 (Mocha: fg #cdd6f4 / bg #1e1e2e).
+# 필요하면 아래 두 줄을 살려서 덮어쓸 것 — theme 뒤에 와야 적용됨.
+# foreground = #cdd6f4
+# background = #1e1e2e
+
+# ── 폰트 ───────────────────────────────────────────────────
+# 현재 (2026-10-06): Jetendard 13pt — 영문+한글 한 폰트
+#   https://github.com/kuskhan/jetendard (v0.1.0 릴리즈 TTF 를 ~/Library/Fonts 에 수동 설치)
+#   JetBrainsMono Nerd Font Mono + Pretendard 한글(1.15배)을 "정확히 2칸"에 맞춰 재빌드한 폰트.
+#   한글이 폰트 안에 들어 있어 font-codepoint-map 이 필요 없다.
+#
+# 시도했던 조합 (모두 설치돼 있음 — 아래 두 줄로 되돌릴 수 있다):
+#   font-family = SF Mono
+#   font-codepoint-map = U+1100-U+11FF,U+3130-U+318F,U+A960-U+A97F,U+AC00-U+D7A3,U+D7B0-U+D7FF=Noto Sans Mono CJK KR
+# 비고정폭 한글을 codepoint-map 으로 붙이면 터미널 2칸 격자와 안 맞아 실패했다 (2026-10-06 실측):
+#   Apple SD Gothic Neo — 한글이 너무 큼 / Pretendard — 글자 사이가 띄엄띄엄 / 배민 주아 — 어색함
+#
+# font-family 를 여러 번 쓰면 폴백 체인이 된다 (Jetendard 없으면 SF Mono)
+# 확인: `ghostty +show-face --string="Ag1가"`
+font-family = Jetendard
+font-family = SF Mono
+font-size = 13
+# 기본 굵기는 흐려 보여서 한 단계 올림 (Jetendard 는 Thin~ExtraBold 굵기가 모두 있다)
+font-style = Medium
+
+# 글리프를 도톰하게 — 켜면 너무 두꺼워 보여서 끔
+font-thicken = false
+
+# 줄 간격
+adjust-cell-height = 50%
+
+# ── cmux 전용 항목은 여기 두지 않는다 ─────────────────────
+# sidebar-font-size / surface-tab-bar-font-size 는 ghostty 설정 키가 아니라
+# (Ghostty.app 이 "unknown field" 로 경고함) cmux 설정 UI가 관리하는 값이다.
+#   설정 → 사이드바 글꼴 크기 / 탭 바 글꼴 크기
+# cmux 0.65.0 부터는 cmux 전용 config(com.cmuxterm.app/config.ghostty)에 넣어도
+# unknown field 오류가 난다. 반드시 설정 UI 로 바꿀 것.
+# (2026-10-06 0.65.0 업데이트 때 UI 값이 기본값으로 초기화됐다)
+
+# ── 단축키 ────────────────────────────────────────────────
+# Cmd+B → Ctrl+b(0x02) 전송: herdr prefix를 Cmd+B로도 누를 수 있게 (2026-11-09)
+# herdr 쪽 prefix는 ctrl+b 그대로라 Ctrl+b도 계속 동작한다.
+keybind = super+b=text:\x02
+
+# Cmd+1~9 → herdr 탭 이동 (Ctrl+b 다음 숫자를 보냄). Ghostty 자체 탭 이동은 쓰지 않음 (2026-11-09)
+keybind = super+1=text:1
+keybind = super+digit_1=text:1
+keybind = super+2=text:2
+keybind = super+digit_2=text:2
+keybind = super+3=text:3
+keybind = super+digit_3=text:3
+keybind = super+4=text:4
+keybind = super+digit_4=text:4
+keybind = super+5=text:5
+keybind = super+digit_5=text:5
+keybind = super+6=text:6
+keybind = super+digit_6=text:6
+keybind = super+7=text:7
+keybind = super+digit_7=text:7
+keybind = super+8=text:8
+keybind = super+digit_8=text:8
+keybind = super+9=text:9
+keybind = super+digit_9=text:9
+
+# Cmd+J → 마지막 알림 보낸 herdr 창으로 이동 (prefix+j)
+keybind = super+j=text:\x02j
+
+# Cmd+Z → herdr 탭 닫기 (prefix + Shift+x). Ghostty 기본 undo를 덮어씀 (2026-11-09 사용자 요청)
+keybind = super+z=text:\x02X

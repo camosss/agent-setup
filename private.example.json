@@ -1,0 +1,10 @@
+{
+  "private_pattern": "my-company|my-internal-domain|my-username",
+  "strip_automode_environment": true,
+  "strip_settings_env": ["OTEL_RESOURCE_ATTRIBUTES"],
+  "claude_md_blocks": ["MY_ORG_TOOLS"],
+  "renames": [
+    ["my-company-ios", "ios-app"],
+    ["my-company-server", "server"]
+  ]
+}

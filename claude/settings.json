@@ -1,0 +1,118 @@
+{
+  "env": {},
+  "attribution": {
+    "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
+    "pr": ""
+  },
+  "model": "opus[1m]",
+  "deniedMcpServers": [
+    {
+      "serverName": "claude.ai Gmail"
+    },
+    {
+      "serverName": "claude.ai Google Calendar"
+    },
+    {
+      "serverName": "claude.ai Google Drive"
+    },
+    {
+      "serverName": "claude.ai Box"
+    },
+    {
+      "serverName": "claude.ai Canva"
+    },
+    {
+      "serverName": "claude.ai Asana"
+    },
+    {
+      "serverName": "claude.ai HubSpot"
+    },
+    {
+      "serverName": "claude.ai monday.com"
+    }
+  ],
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '__HOME__/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '__HOME__/.claude/hooks/herdr-banner-notify.sh' stop",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '__HOME__/.claude/hooks/herdr-banner-notify.sh' notification",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I '__HOME__/.claude/hooks/context-hygiene.py'",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "[ \"${HERDR_ENV:-}\" = 1 ] && sh '__HOME__/.claude/hooks/herdr-tab-dot.sh' clear; exit 0",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "data@synced": false,
+    "design@synced": false,
+    "cowork-plugin-management@synced": false
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  },
+  "autoCompactWindow": 400000,
+  "cleanupPeriodDays": 14,
+  "tui": "fullscreen",
+  "theme": "auto",
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Deleting files inside ~/.claude/handoffs/ (rm, rm -f on handoff memos, .start.txt, and temp files there) — session handoff memos are removed once the new session has taken over; nothing outside that folder"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(fastlane:*) release/production lanes (anything beyond `fastlane beta` to the dev channel)"
+    ]
+  }
+}

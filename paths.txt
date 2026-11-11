@@ -1,0 +1,8 @@
+# 레포 경로|실제 경로   (sync.sh 는 실제 → 레포, install.sh 는 레포 → 실제)
+claude/settings.json|~/.claude/settings.json
+claude/CLAUDE.md|~/.claude/CLAUDE.md
+claude/hooks|~/.claude/hooks
+claude/skills/dispatch-work-sessions|~/.claude/skills/dispatch-work-sessions
+hammerspoon/init.lua|~/.hammerspoon/init.lua
+herdr/config.toml|~/.config/herdr/config.toml
+ghostty/config|~/.config/ghostty/config
