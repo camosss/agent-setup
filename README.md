@@ -66,7 +66,7 @@ When it finishes, it prints the remaining manual steps:
 | [`hammerspoon/`](./hammerspoon) | `~/.hammerspoon/` | Silent notification banners that jump to the agent's pane on click, image paste shortcut |
 | [`herdr/`](./herdr) | `~/.config/herdr/` | Agent pane sorting, labels, session restore, jump to the last notified pane (`prefix+j`) |
 | [`ghostty/`](./ghostty) | `~/.config/ghostty/` | Terminal settings |
-| [`Brewfile`](./Brewfile) | - | `claude-code@latest`, hammerspoon, herdr, gh, node |
+| [`Brewfile`](./Brewfile) | - | `claude-code@latest`, hammerspoon, herdr, gh, lazygit, node |
 | [`launchd/`](./launchd) | `~/Library/LaunchAgents/` | Daily sync at 21:00 |
 
 <br>

@@ -1,6 +1,7 @@
-# Claude Code 는 최신 채널(latest)을 따라간다
+# Claude Code follows the latest release channel
 cask "claude-code@latest"
 cask "hammerspoon"
 brew "herdr"
 brew "gh"
-brew "node"   # npx ccusage 사용량 분석
+brew "lazygit" # terminal UI for git, to review agent changes
+brew "node"    # npx ccusage for usage analysis
