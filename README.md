@@ -12,10 +12,6 @@ A one-command setup for working with multiple Claude Code agents: launching them
 
 <br>
 
----
-
-<br>
-
 ## Contents
 
 | Looking for | Section |
@@ -26,10 +22,6 @@ A one-command setup for working with multiple Claude Code agents: launching them
 | How it behaves day to day | [Behavior](#behavior) |
 | Push changes after editing settings | [Sync](#sync) |
 | Keeping private info out of a public repo | [Public repo safeguards](#public-repo-safeguards) |
-
-<br>
-
----
 
 <br>
 
@@ -63,10 +55,6 @@ When it finishes, it prints the remaining manual steps:
 
 <br>
 
----
-
-<br>
-
 ## Layout
 
 | Path | Installed to | What it holds |
@@ -83,10 +71,6 @@ When it finishes, it prints the remaining manual steps:
 
 <br>
 
----
-
-<br>
-
 ## Token savings
 
 Most usage comes from long-running sessions that re-read a large context on every turn. These settings keep the context small.
@@ -99,10 +83,6 @@ Most usage comes from long-running sessions that re-read a large context on ever
 | [`context-hygiene.py`](./claude/hooks/context-hygiene.py) | 200K, 300K | Above 200K, suggests `/clear` when the topic changes. Above 300K, writes a handoff note right away and suggests a fresh session |
 | Compaction rules in `CLAUDE.md` | - | Summaries always keep the goal, task card number, branch, PR, remaining work, and decisions |
 | One session per task | - | Work sessions close once the PR and review fixes are done, and reopen for the next task |
-
-<br>
-
----
 
 <br>
 
@@ -122,10 +102,6 @@ The current local settings are synced to this repo.
 
 <br>
 
----
-
-<br>
-
 ## Sync
 
 Settings are copied, not symlinked. Claude Code rewrites its settings file, which would break a symlink.
@@ -142,10 +118,6 @@ Settings are copied, not symlinked. Claude Code rewrites its settings file, whic
 
 <br>
 
----
-
-<br>
-
 ## Public repo safeguards
 
 `sync.sh` reads `~/.config/agent-setup/private.json`, which lives outside the repo. Before committing, it:
@@ -155,10 +127,6 @@ Settings are copied, not symlinked. Claude Code rewrites its settings file, whic
 3. Stops without committing if any private word or token-like string is still left
 
 `install.sh` reverses the name replacements when `private.json` is present, and keeps the private values already in your local settings.
-
-<br>
-
----
 
 <br>
 
