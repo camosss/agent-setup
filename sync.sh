@@ -88,6 +88,6 @@ if [[ $dry == 1 ]]; then
   git reset -q
   exit 0
 fi
-git commit -q -m "설정 동기화 $(date '+%Y-%m-%d %H:%M')"
+git commit -q -m "Sync settings $(date '+%Y-%m-%d %H:%M')"
 git push -q origin main
 echo "push 완료"
