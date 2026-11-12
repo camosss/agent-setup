@@ -14,7 +14,7 @@ dry=0; [[ "${1:-}" == "--dry-run" ]] && dry=1
 [[ -f "$PRIVATE" ]] || { echo "중단: $PRIVATE 가 없습니다. private.example.json 을 참고해 만드세요." >&2; exit 1; }
 
 # 레포에 남기지 않는 실행 중 파일
-EXCLUDES=(--exclude __pycache__ --exclude state --exclude herdr-last-notified --exclude .DS_Store)
+EXCLUDES=(--exclude __pycache__ --exclude state --exclude herdr-last-notified --exclude herdr-tab-names.json --exclude .DS_Store)
 
 while IFS='|' read -r rel live; do
   [[ -z "$rel" || "$rel" == \#* ]] && continue

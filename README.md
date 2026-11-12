@@ -61,7 +61,7 @@ When it finishes, it prints the remaining manual steps:
 |------|--------------|---------------|
 | [`claude/settings.json`](./claude/settings.json) | `~/.claude/settings.json` | Model, auto-compact window, transcript retention, blocked connectors, hooks, auto mode rules |
 | [`claude/CLAUDE.md`](./claude/CLAUDE.md) | `~/.claude/CLAUDE.md` | Instructions for every session: reply language, what to keep when compacting, subagent use, work session lifecycle |
-| [`claude/hooks/`](./claude/hooks) | `~/.claude/hooks/` | Context cleanup reminders, completion notifications, Herdr tab markers |
+| [`claude/hooks/`](./claude/hooks) | `~/.claude/hooks/` | Context cleanup reminders, completion notifications, Herdr tab markers, tab names that follow the Claude session title |
 | [`claude/skills/dispatch-work-sessions/`](./claude/skills/dispatch-work-sessions) | `~/.claude/skills/` | Skill that lets a coordinator session open work sessions, send them instructions, and close them when the task is done |
 | [`hammerspoon/`](./hammerspoon) | `~/.hammerspoon/` | Silent notification banners that jump to the agent's pane on click, image paste shortcut |
 | [`herdr/`](./herdr) | `~/.config/herdr/` | Agent pane sorting, labels, session restore, jump to the last notified pane (`prefix+j`) |
