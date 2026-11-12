@@ -56,7 +56,7 @@ adjust-cell-height = 50%
 # herdr 쪽 prefix는 ctrl+b 그대로라 Ctrl+b도 계속 동작한다.
 keybind = super+b=text:\x02
 
-# Cmd+1~9 → herdr 워크스페이스 이동 (Ctrl+b 다음 숫자를 보냄). Ghostty 자체 탭 이동은 쓰지 않음 (2026-11-09)
+# Cmd+1~9 → herdr 탭 이동 (Ctrl+b 다음 숫자를 보냄). Ghostty 자체 탭 이동은 쓰지 않음 (2026-11-09)
 keybind = super+1=text:1
 keybind = super+digit_1=text:1
 keybind = super+2=text:2
@@ -76,25 +76,43 @@ keybind = super+digit_8=text:8
 keybind = super+9=text:9
 keybind = super+digit_9=text:9
 
-# Cmd+Shift+1~9 → herdr 탭 이동 (Ctrl+b 다음 Shift+숫자를 보냄, 2026-11-12)
-keybind = super+shift+1=text:!
-keybind = super+shift+digit_1=text:!
-keybind = super+shift+2=text:@
-keybind = super+shift+digit_2=text:@
-keybind = super+shift+3=text:#
-keybind = super+shift+digit_3=text:#
-keybind = super+shift+4=text:$
-keybind = super+shift+digit_4=text:$
-keybind = super+shift+5=text:%
-keybind = super+shift+digit_5=text:%
-keybind = super+shift+6=text:^
-keybind = super+shift+digit_6=text:^
-keybind = super+shift+7=text:&
-keybind = super+shift+digit_7=text:&
-keybind = super+shift+8=text:*
-keybind = super+shift+digit_8=text:*
-keybind = super+shift+9=text:(
-keybind = super+shift+digit_9=text:(
+# Cmd+X 다음 1~9 → herdr 워크스페이스 이동 (Ctrl+b 다음 Shift+숫자를 보냄). Cmd를 떼도, 누른 채여도 동작. Ghostty 잘라내기를 덮어씀 (2026-11-12)
+keybind = super+x>1=text:!
+keybind = super+x>digit_1=text:!
+keybind = super+x>super+1=text:!
+keybind = super+x>super+digit_1=text:!
+keybind = super+x>2=text:@
+keybind = super+x>digit_2=text:@
+keybind = super+x>super+2=text:@
+keybind = super+x>super+digit_2=text:@
+keybind = super+x>3=text:#
+keybind = super+x>digit_3=text:#
+keybind = super+x>super+3=text:#
+keybind = super+x>super+digit_3=text:#
+keybind = super+x>4=text:$
+keybind = super+x>digit_4=text:$
+keybind = super+x>super+4=text:$
+keybind = super+x>super+digit_4=text:$
+keybind = super+x>5=text:%
+keybind = super+x>digit_5=text:%
+keybind = super+x>super+5=text:%
+keybind = super+x>super+digit_5=text:%
+keybind = super+x>6=text:^
+keybind = super+x>digit_6=text:^
+keybind = super+x>super+6=text:^
+keybind = super+x>super+digit_6=text:^
+keybind = super+x>7=text:&
+keybind = super+x>digit_7=text:&
+keybind = super+x>super+7=text:&
+keybind = super+x>super+digit_7=text:&
+keybind = super+x>8=text:*
+keybind = super+x>digit_8=text:*
+keybind = super+x>super+8=text:*
+keybind = super+x>super+digit_8=text:*
+keybind = super+x>9=text:(
+keybind = super+x>digit_9=text:(
+keybind = super+x>super+9=text:(
+keybind = super+x>super+digit_9=text:(
 
 # Cmd+J → 마지막 알림 보낸 herdr 창으로 이동 (prefix+j)
 keybind = super+j=text:\x02j

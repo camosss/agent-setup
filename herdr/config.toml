@@ -38,7 +38,7 @@ key = "prefix+j"
 type = "shell"
 command = "p=$(cat ~/.claude/hooks/herdr-last-notified 2>/dev/null); [ -n \"$p\" ] && herdr agent focus \"$p\""
 
-# 워크스페이스 1~9 전환: prefix + 숫자 (Ghostty Cmd+1~9), 탭 1~9 전환: prefix + Shift+숫자 (Ghostty Cmd+Shift+1~9) (2026-11-12)
+# 탭 1~9 전환: prefix + 숫자 (Ghostty Cmd+1~9), 워크스페이스 1~9 전환: prefix + Shift+숫자 (Ghostty Cmd+X 다음 숫자) (2026-11-12)
 [keys]
-switch_workspace = "prefix+1..9"
-switch_tab = "prefix+shift+1..9"
+switch_tab = "prefix+1..9"
+switch_workspace = "prefix+shift+1..9"

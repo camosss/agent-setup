@@ -49,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '__HOME__/.claude/hooks/herdr-banner-notify.sh' stop",
+            "command": "[ \"${HERDR_ENV:-}\" = 1 ] && sh '__HOME__/.claude/hooks/herdr-tab-name.sh' </dev/null; bash '__HOME__/.claude/hooks/herdr-banner-notify.sh' stop",
             "timeout": 10,
             "async": true
           }
@@ -78,7 +78,7 @@
           },
           {
             "type": "command",
-            "command": "[ \"${HERDR_ENV:-}\" = 1 ] && sh '__HOME__/.claude/hooks/herdr-tab-dot.sh' clear; exit 0",
+            "command": "[ \"${HERDR_ENV:-}\" = 1 ] && sh '__HOME__/.claude/hooks/herdr-tab-dot.sh' clear && sh '__HOME__/.claude/hooks/herdr-tab-name.sh'; exit 0",
             "timeout": 10,
             "async": true
           }
