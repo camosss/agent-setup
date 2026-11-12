@@ -56,7 +56,7 @@ adjust-cell-height = 50%
 # herdr 쪽 prefix는 ctrl+b 그대로라 Ctrl+b도 계속 동작한다.
 keybind = super+b=text:\x02
 
-# Cmd+1~9 → herdr 탭 이동 (Ctrl+b 다음 숫자를 보냄). Ghostty 자체 탭 이동은 쓰지 않음 (2026-11-09)
+# Cmd+1~9 → herdr 워크스페이스 이동 (Ctrl+b 다음 숫자를 보냄). Ghostty 자체 탭 이동은 쓰지 않음 (2026-11-09)
 keybind = super+1=text:1
 keybind = super+digit_1=text:1
 keybind = super+2=text:2
@@ -76,7 +76,7 @@ keybind = super+digit_8=text:8
 keybind = super+9=text:9
 keybind = super+digit_9=text:9
 
-# Cmd+Shift+1~9 → herdr 워크스페이스 이동 (Ctrl+b 다음 Shift+숫자를 보냄, 2026-11-12)
+# Cmd+Shift+1~9 → herdr 탭 이동 (Ctrl+b 다음 Shift+숫자를 보냄, 2026-11-12)
 keybind = super+shift+1=text:!
 keybind = super+shift+digit_1=text:!
 keybind = super+shift+2=text:@
