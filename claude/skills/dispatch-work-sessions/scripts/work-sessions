@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# 조율 세션 옆에 플랫폼별 Claude 작업 세션을 열고 지시를 넣는다. 끝난 세션은 닫는다
+# 조율 세션과 같은 워크스페이스의 새 탭에 플랫폼별 Claude 작업 세션을 열고 지시를 넣는다. 끝난 세션은 닫는다
 #
 #   work-sessions open  --project 3872 --session server=~/Desktop/server-3872 \
-#                       --session ios=~/Desktop/ios-app-3872 [--prompt-dir DIR]
-#   work-sessions close --project 3872 [--platform ios] [--force]
+#                       --session ios=~/Desktop/ios-app-3872 [--stage qa] [--prompt-dir DIR]
+#   work-sessions close --project 3872 [--platform ios] [--stage qa] [--force]
 #   work-sessions list  [--project 3872]
 #
+# 같은 프로젝트, 같은 단계(--stage)의 세션은 한 탭에 모은다. 탭 이름은 herdr-tab-name.sh 훅이 세션 제목으로 붙인다
 # prompt-dir 에 common.md 가 있으면 각 플랫폼 지시(<platform>.md) 앞에 붙여 보낸다
 set -euo pipefail
 
@@ -16,18 +17,20 @@ json() { python3 -c "import sys,json;d=json.load(sys.stdin);print($1)"; }
 command -v herdr >/dev/null || die "herdr 가 없습니다"
 
 cmd="${1:-}"; shift || true
-project=""; prompt_dir=""; herdr_session="${HERDR_TARGET_SESSION:-}"; specs=(); platform_only=""; force=0
+project=""; prompt_dir=""; herdr_session="${HERDR_TARGET_SESSION:-}"; specs=(); platform_only=""; stage=""; force=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --project) project="$2"; shift 2 ;;
     --session) specs+=("$2"); shift 2 ;;
     --prompt-dir) prompt_dir="$2"; shift 2 ;;
     --platform) platform_only="$2"; shift 2 ;;
+    --stage) stage="$2"; shift 2 ;;
     --force) force=1; shift ;;
     --herdr-session) herdr_session="$2"; shift 2 ;;
     *) die "모르는 인자: $1" ;;
   esac
 done
+[[ -z "$stage" || "$stage" =~ ^[a-z0-9]+$ ]] || die "--stage 는 영소문자와 숫자만 씁니다: $stage"
 
 if [[ -z "$herdr_session" ]]; then
   herdr_session=$(herdr session list --json | json '",".join(s["name"] for s in d["sessions"] if s.get("running"))')
@@ -38,9 +41,27 @@ h() { herdr --session "$herdr_session" "$@"; }
 # 조율 세션 패널: 이 스크립트를 부른 Claude 의 패널
 self_json=$(h pane current --current) || die "현재 패널을 찾지 못했습니다"
 self_pane=$(echo "$self_json" | json 'd["result"]["pane"]["pane_id"]')
-self_tab=$(echo "$self_json" | json 'd["result"]["pane"]["tab_id"]')
+self_ws=$(echo "$self_json" | json 'd["result"]["pane"]["workspace_id"]')
 
-agents_json() { h agent list; }
+# 에이전트 이름: p<N>-<platform>[-<stage>]. Herdr 에이전트 이름은 영소문자로 시작해야 한다
+agent_name() { echo "p${project}-$1${stage:+-$stage}"; }
+
+# 이 워크스페이스에서 조건에 맞는 에이전트: pane name tab cwd
+#   MODE=group  같은 프로젝트, 같은 단계
+#   MODE=exact  이름이 NAME 과 같음
+find_agents() {
+  h agent list | WS="$self_ws" PROJECT="$project" STAGE="$stage" MODE="$1" NAME="${2:-}" python3 -c '
+import sys, json, os, re
+ws, project, stage, mode, name = (os.environ[k] for k in ("WS", "PROJECT", "STAGE", "MODE", "NAME"))
+group = re.compile(rf"^p{re.escape(project)}-[a-z0-9_]+" + (rf"-{re.escape(stage)}$" if stage else "$"))
+for a in json.load(sys.stdin)["result"]["agents"]:
+    n = a.get("name") or ""
+    if a.get("workspace_id") != ws:
+        continue
+    if (n == name) if mode == "exact" else bool(group.match(n)):
+        print(a["pane_id"], n, a["tab_id"], a.get("cwd") or "-")
+'
+}
 
 case "$cmd" in
 open)
@@ -55,25 +76,37 @@ open)
     esac
   }
 
-  h pane rename "$self_pane" 검증 >/dev/null
+  h pane rename "$self_pane" 조율 >/dev/null
+
+  # 같은 프로젝트, 같은 단계의 세션이 있는 탭을 이어 쓴다. 조율 세션의 탭은 쓰지 않는다
+  self_tab=$(echo "$self_json" | json 'd["result"]["pane"]["tab_id"]')
+  target_tab=$(find_agents group | awk -v self="$self_tab" '$3 != self {print $3; exit}')
 
   for spec in "${specs[@]}"; do
     platform="${spec%%=*}"; cwd="${spec#*=}"; cwd="${cwd/#\~/$HOME}"
+    [[ "$platform" =~ ^[a-z0-9_]+$ ]] || die "플랫폼 이름은 영소문자, 숫자, _ 만 씁니다: $platform"
     [[ -d "$cwd" ]] || die "작업 경로가 없습니다: $cwd (worktree 를 먼저 만드세요)"
-    # Herdr 에이전트 이름은 영소문자로 시작해야 한다
-    name="p${project}-${platform}"
+    name=$(agent_name "$platform")
     [[ "$name" =~ ^[a-z][a-z0-9_-]{0,31}$ ]] || die "에이전트 이름 형식이 맞지 않습니다: $name"
+    [[ -z "$(find_agents exact "$name")" ]] || die "이미 열려 있습니다: $name"
 
-    layout=$(h pane layout --pane "$self_pane")
-    pane_count=$(echo "$layout" | json 'len(d["result"]["layout"]["panes"])')
-    # 맨 오른쪽 아래 패널 옆에 붙인다. 4칸을 넘으면 아래로 나눈다
-    anchor=$(echo "$layout" | json 'max(d["result"]["layout"]["panes"], key=lambda p:(p["rect"]["x"]+p["rect"]["width"], p["rect"]["y"]))["pane_id"]')
-    direction=right; [[ "$pane_count" -ge 4 ]] && direction=down
+    if [[ -z "$target_tab" ]]; then
+      # 탭 이름을 주지 않는다. 숫자 이름이어야 herdr-tab-name.sh 가 세션 제목으로 바꾼다
+      created=$(h tab create --workspace "$self_ws" --cwd "$cwd" --no-focus)
+      target_tab=$(echo "$created" | json 'd["result"]["tab"]["tab_id"]')
+      new_pane=$(echo "$created" | json 'd["result"]["root_pane"]["pane_id"]')
+    else
+      layout=$(h pane layout --pane "$(h pane list | TAB="$target_tab" python3 -c 'import sys,json,os;print(next(p["pane_id"] for p in json.load(sys.stdin)["result"]["panes"] if p["tab_id"]==os.environ["TAB"]))')")
+      pane_count=$(echo "$layout" | json 'len(d["result"]["layout"]["panes"])')
+      # 맨 오른쪽 아래 패널 옆에 붙인다. 4칸을 넘으면 아래로 나눈다
+      anchor=$(echo "$layout" | json 'max(d["result"]["layout"]["panes"], key=lambda p:(p["rect"]["x"]+p["rect"]["width"], p["rect"]["y"]))["pane_id"]')
+      direction=right; [[ "$pane_count" -ge 4 ]] && direction=down
+      new_pane=$(h pane split "$anchor" --direction "$direction" --cwd "$cwd" --no-focus | json 'd["result"]["pane"]["pane_id"]')
+    fi
 
-    new_pane=$(h pane split "$anchor" --direction "$direction" --cwd "$cwd" --no-focus | json 'd["result"]["pane"]["pane_id"]')
     h agent start "$name" --kind claude --pane "$new_pane" --timeout 60000 >/dev/null
     h pane rename "$new_pane" "$(title_of "$platform")" >/dev/null
-    echo "열림: $name pane=$new_pane cwd=$cwd"
+    echo "열림: $name tab=$target_tab pane=$new_pane cwd=$cwd"
 
     if [[ -n "$prompt_dir" ]]; then
       prompt=""
@@ -92,7 +125,7 @@ open)
   if [[ -n "$prompt_dir" ]]; then
     sleep 8
     for spec in "${specs[@]}"; do
-      name="p${project}-${spec%%=*}"
+      name=$(agent_name "${spec%%=*}")
       status=$(h agent get "$name" | json 'd["result"]["agent"]["agent_status"]' 2>/dev/null || echo unknown)
       echo "상태: $name $status"
     done
@@ -101,17 +134,14 @@ open)
 
 close)
   [[ -n "$project" ]] || die "--project 가 필요합니다"
-  prefix="p${project}-${platform_only}"
-  panes=$(agents_json | PREFIX="$prefix" EXACT="$platform_only" python3 -c '
-import sys, json, os
-prefix, exact = os.environ["PREFIX"], os.environ["EXACT"]
-for a in json.load(sys.stdin)["result"]["agents"]:
-    name = a.get("name") or ""
-    if (name == prefix) if exact else name.startswith(prefix):
-        print(a["pane_id"], name, a.get("cwd") or "-")
-')
-  [[ -n "$panes" ]] || { echo "닫을 ${prefix} 세션이 없습니다"; exit 0; }
-  while read -r pane name cwd; do
+  if [[ -n "$platform_only" ]]; then
+    panes=$(find_agents exact "$(agent_name "$platform_only")")
+  else
+    panes=$(find_agents group)
+  fi
+  [[ -n "$panes" ]] || { echo "닫을 p${project} 세션이 없습니다${stage:+ (단계 $stage)}"; exit 0; }
+  # 탭의 마지막 칸을 닫으면 탭도 함께 닫힌다
+  while read -r pane name _tab cwd; do
     [[ "$pane" == "$self_pane" ]] && continue
     # 커밋 안 한 변경이나 push 안 한 커밋이 있으면 닫지 않는다
     if [[ "$force" != 1 && -d "$cwd" ]] && git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
@@ -127,14 +157,14 @@ for a in json.load(sys.stdin)["result"]["agents"]:
   ;;
 
 list)
-  agents_json | TAB="$self_tab" PROJECT="$project" python3 -c '
+  h agent list | WS="$self_ws" PROJECT="$project" python3 -c '
 import sys, json, os
-tab, project = os.environ["TAB"], os.environ["PROJECT"]
+ws, project = os.environ["WS"], os.environ["PROJECT"]
 for a in json.load(sys.stdin)["result"]["agents"]:
     name = a.get("name") or "-"
-    if a.get("tab_id") != tab or (project and not name.startswith(f"p{project}-")):
+    if a.get("workspace_id") != ws or (project and not name.startswith(f"p{project}-")):
         continue
-    print(name, a["pane_id"], a.get("agent_status"), a.get("cwd"), sep="\t")
+    print(name, a["tab_id"], a["pane_id"], a.get("agent_status"), a.get("cwd"), sep="\t")
 '
   ;;
 

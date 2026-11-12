@@ -95,7 +95,7 @@ The `context-hygiene` hook reads the context size of the last reply. Past a thre
 If you are not looking at that pane, Hammerspoon shows a banner and Herdr marks the tab.
 
 **Coordinator sessions**
-They open work sessions and send instructions. After verifying a completion report (PR link, remaining work), they close the session. Sessions with uncommitted or unpushed changes are never closed.
+They open work sessions in a new tab of their own workspace (one workspace per project, one tab per stage) and send instructions. Tab names follow the Claude session title. After verifying a completion report (PR link, remaining work), they close the session. Sessions with uncommitted or unpushed changes are never closed.
 
 **Once a day**
 The current local settings are synced to this repo.
