@@ -56,25 +56,25 @@ adjust-cell-height = 50%
 # herdr 쪽 prefix는 ctrl+b 그대로라 Ctrl+b도 계속 동작한다.
 keybind = super+b=text:\x02
 
-# Cmd+1~9 → herdr 탭 이동 (Ctrl+b 다음 숫자를 보냄). Ghostty 자체 탭 이동은 쓰지 않음 (2026-11-09)
-keybind = super+1=text:1
-keybind = super+digit_1=text:1
-keybind = super+2=text:2
-keybind = super+digit_2=text:2
-keybind = super+3=text:3
-keybind = super+digit_3=text:3
-keybind = super+4=text:4
-keybind = super+digit_4=text:4
-keybind = super+5=text:5
-keybind = super+digit_5=text:5
-keybind = super+6=text:6
-keybind = super+digit_6=text:6
-keybind = super+7=text:7
-keybind = super+digit_7=text:7
-keybind = super+8=text:8
-keybind = super+digit_8=text:8
-keybind = super+9=text:9
-keybind = super+digit_9=text:9
+# Cmd+1~9 → herdr 탭 이동 (Ctrl+b 다음 Shift+숫자를 보냄, herdr switch_tab = prefix+shift+1..9). Cmd+B 다음 숫자는 워크스페이스 이동. Ghostty 자체 탭 이동은 쓰지 않음 (2026-11-09)
+keybind = super+1=text:!
+keybind = super+digit_1=text:!
+keybind = super+2=text:@
+keybind = super+digit_2=text:@
+keybind = super+3=text:#
+keybind = super+digit_3=text:#
+keybind = super+4=text:$
+keybind = super+digit_4=text:$
+keybind = super+5=text:%
+keybind = super+digit_5=text:%
+keybind = super+6=text:^
+keybind = super+digit_6=text:^
+keybind = super+7=text:&
+keybind = super+digit_7=text:&
+keybind = super+8=text:*
+keybind = super+digit_8=text:*
+keybind = super+9=text:(
+keybind = super+digit_9=text:(
 
 # Cmd+J → 마지막 알림 보낸 herdr 창으로 이동 (prefix+j)
 keybind = super+j=text:\x02j
