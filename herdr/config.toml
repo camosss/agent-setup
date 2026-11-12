@@ -37,3 +37,7 @@ rows = [
 key = "prefix+j"
 type = "shell"
 command = "p=$(cat ~/.claude/hooks/herdr-last-notified 2>/dev/null); [ -n \"$p\" ] && herdr agent focus \"$p\""
+
+# 워크스페이스 1~9 전환: prefix + Shift+숫자 (Ghostty에서 Cmd+Shift+1~9로 보냄, 2026-11-12)
+[keys]
+switch_workspace = "prefix+shift+1..9"
