@@ -76,26 +76,6 @@ keybind = super+digit_8=text:8
 keybind = super+9=text:9
 keybind = super+digit_9=text:9
 
-# Cmd+Shift+1~9 → herdr 워크스페이스 이동 (Ctrl+b 다음 Shift+숫자를 보냄, 2026-11-12)
-keybind = super+shift+1=text:!
-keybind = super+shift+digit_1=text:!
-keybind = super+shift+2=text:@
-keybind = super+shift+digit_2=text:@
-keybind = super+shift+3=text:#
-keybind = super+shift+digit_3=text:#
-keybind = super+shift+4=text:$
-keybind = super+shift+digit_4=text:$
-keybind = super+shift+5=text:%
-keybind = super+shift+digit_5=text:%
-keybind = super+shift+6=text:^
-keybind = super+shift+digit_6=text:^
-keybind = super+shift+7=text:&
-keybind = super+shift+digit_7=text:&
-keybind = super+shift+8=text:*
-keybind = super+shift+digit_8=text:*
-keybind = super+shift+9=text:(
-keybind = super+shift+digit_9=text:(
-
 # Cmd+J → 마지막 알림 보낸 herdr 창으로 이동 (prefix+j)
 keybind = super+j=text:\x02j
 
