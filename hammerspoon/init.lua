@@ -22,7 +22,9 @@ local function focusPane(pane)
 end
 
 local function relayout()
-  local f = hs.screen.mainScreen():frame()
+  -- 마우스 커서가 있는 모니터에 띄운다 (모니터 여러 대일 때 보고 있는 화면, 2026-11-12 사용자 요청)
+  local scr = hs.mouse.getCurrentScreen() or hs.screen.mainScreen()
+  local f = scr:frame()
   for i, b in ipairs(banners) do
     b.canvas:topLeft({ x = f.x + f.w - WIDTH - MARGIN, y = f.y + MARGIN + (i - 1) * (HEIGHT + GAP) })
   end
