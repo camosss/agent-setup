@@ -78,14 +78,6 @@ PY
 else
   echo "참고: ~/.config/agent-setup/private.json 이 없어 일반 이름 그대로 설치했습니다(private.example.json 참고)."
 fi
-# Herdr 가이드는 원본(2ykwang/dotfiles, 라이선스 없음)을 다시 배포하지 않고 고정 커밋에서 받아 온다
-guides="$HOME/.claude/agent-guides"
-src="https://raw.githubusercontent.com/2ykwang/dotfiles/482f5d8/agent-guides"
-mkdir -p "$guides/herdr"
-for f in herdr.md herdr/operations.md herdr/automation.md; do
-  curl -fsSL "$src/$f" -o "$guides/$f" || echo "가이드 받기 실패: $f"
-done
-echo "출처: https://github.com/2ykwang/dotfiles/tree/main/agent-guides (커밋 482f5d8)" > "$guides/SOURCE.txt"
 chmod +x "$HOME"/.claude/hooks/*.sh "$HOME"/.claude/skills/dispatch-work-sessions/scripts/* 2>/dev/null || true
 
 # 3. 하루 한 번 자동 동기화

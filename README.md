@@ -134,4 +134,4 @@ Settings are copied, not symlinked. Claude Code rewrites its settings file, whic
 
 - Memory (`~/.claude/projects/*/memory`) and session transcripts
 - Work-specific skills and plugins, tokens, and credential files
-- Herdr guides (`~/.claude/agent-guides`): the source, [2ykwang/dotfiles](https://github.com/2ykwang/dotfiles/tree/main/agent-guides), has no license, so they are not redistributed here. `install.sh` downloads them from a pinned commit instead.
+- Herdr guides (`~/.claude/agent-guides`)
