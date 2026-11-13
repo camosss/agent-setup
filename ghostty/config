@@ -76,6 +76,26 @@ keybind = super+digit_8=text:*
 keybind = super+9=text:(
 keybind = super+digit_9=text:(
 
+# Ctrl+1~9 → herdr 탭 이동 (Ctrl+b 다음 숫자를 보냄, herdr switch_tab = prefix+1..9, 2026-11-13)
+keybind = ctrl+1=text:1
+keybind = ctrl+digit_1=text:1
+keybind = ctrl+2=text:2
+keybind = ctrl+digit_2=text:2
+keybind = ctrl+3=text:3
+keybind = ctrl+digit_3=text:3
+keybind = ctrl+4=text:4
+keybind = ctrl+digit_4=text:4
+keybind = ctrl+5=text:5
+keybind = ctrl+digit_5=text:5
+keybind = ctrl+6=text:6
+keybind = ctrl+digit_6=text:6
+keybind = ctrl+7=text:7
+keybind = ctrl+digit_7=text:7
+keybind = ctrl+8=text:8
+keybind = ctrl+digit_8=text:8
+keybind = ctrl+9=text:9
+keybind = ctrl+digit_9=text:9
+
 # Cmd+J → 마지막 알림 보낸 herdr 창으로 이동 (prefix+j)
 keybind = super+j=text:\x02j
 
