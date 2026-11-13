@@ -96,6 +96,13 @@ keybind = ctrl+digit_8=text:8
 keybind = ctrl+9=text:9
 keybind = ctrl+digit_9=text:9
 
+# Cmd+A S D F G → herdr 탭 1~5 이동 (Ctrl+b 다음 숫자를 보냄). Ghostty 전체 선택·분할·검색을 덮어씀 (2026-11-13 사용자 요청)
+keybind = super+a=text:1
+keybind = super+s=text:2
+keybind = super+d=text:3
+keybind = super+f=text:4
+keybind = super+g=text:5
+
 # Cmd+J → 마지막 알림 보낸 herdr 창으로 이동 (prefix+j)
 keybind = super+j=text:\x02j
 
