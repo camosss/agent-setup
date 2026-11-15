@@ -1,10 +1,11 @@
 {
+  "cleanupPeriodDays": 14,
   "env": {},
   "attribution": {
     "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
     "pr": ""
   },
-  "model": "opus[1m]",
+  "model": "fable",
   "deniedMcpServers": [
     {
       "serverName": "claude.ai Gmail"
@@ -102,7 +103,6 @@
     }
   },
   "autoCompactWindow": 400000,
-  "cleanupPeriodDays": 14,
   "tui": "fullscreen",
   "theme": "auto",
   "autoMode": {
