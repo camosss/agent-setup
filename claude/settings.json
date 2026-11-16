@@ -5,7 +5,7 @@
     "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
     "pr": ""
   },
-  "model": "fable",
+  "model": "opus",
   "deniedMcpServers": [
     {
       "serverName": "claude.ai Gmail"
