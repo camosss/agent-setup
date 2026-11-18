@@ -112,7 +112,31 @@
     ],
     "soft_deny": [
       "$defaults",
-      "Bash(fastlane:*) release/production lanes (anything beyond `fastlane beta` to the dev channel)"
+      "Bash(fastlane:*) release/production lanes (anything beyond `fastlane beta` to the dev channel)",
+      "Skipping git hooks: `git commit --no-verify` or `-n`, `git push --no-verify`, `-c core.hooksPath=...`, or env such as `HUSKY=0` / `SKIP=...` that disables pre-commit or pre-push checks",
+      "Loosening lint, format, or type-check configuration so a check passes (editing .swiftlint.yml, ktlint/detekt/.editorconfig rules, ruff or other lint sections in pyproject.toml, eslint or tsconfig strictness, or adding file-wide disable comments) unless the user asked for that config change"
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.my*.cnf)",
+      "Read(~/.mysql_history)",
+      "Read(~/.config/gh/hosts.yml)",
+      "Read(~/.netrc)",
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.prod*)",
+      "Edit(~/.ssh/**)",
+      "Edit(~/.aws/**)",
+      "Edit(~/.my*.cnf)",
+      "Edit(~/.mysql_history)",
+      "Edit(~/.config/gh/hosts.yml)",
+      "Edit(~/.netrc)",
+      "Edit(**/.env)",
+      "Edit(**/.env.local)",
+      "Edit(**/.env.prod*)"
     ]
   }
 }

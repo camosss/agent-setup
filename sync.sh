@@ -14,7 +14,8 @@ dry=0; [[ "${1:-}" == "--dry-run" ]] && dry=1
 [[ -f "$PRIVATE" ]] || { echo "중단: $PRIVATE 가 없습니다. private.example.json 을 참고해 만드세요." >&2; exit 1; }
 
 # 레포에 남기지 않는 실행 중 파일
-EXCLUDES=(--exclude __pycache__ --exclude state --exclude herdr-last-notified --exclude herdr-tab-names.json --exclude .DS_Store)
+EXCLUDES=(--exclude __pycache__ --exclude state --exclude herdr-last-notified --exclude herdr-tab-names.json --exclude .DS_Store
+          --exclude herdr-agent-state.sh)  # herdr integration install claude 가 설치, 갱신한다
 
 while IFS='|' read -r rel live; do
   [[ -z "$rel" || "$rel" == \#* ]] && continue
@@ -73,8 +74,34 @@ if grep -rniIE --exclude-dir=.git "$pattern" . ; then
   echo "중단: 비공개 단어가 남아 있습니다. 위 줄을 확인하세요." >&2
   exit 1
 fi
-if grep -rnIE --exclude-dir=.git '(ghp_|gho_|github_pat_)[A-Za-z0-9_]{20,}|sk-ant-[A-Za-z0-9_-]{20,}|xox[abpr]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY' . ; then
+if grep -rnIE --exclude-dir=.git '(ghp_|gho_|github_pat_)[A-Za-z0-9_]{20,}|sk-ant-[A-Za-z0-9_-]{20,}|xox[abpre]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|(ntn_|secret_)[A-Za-z0-9]{30,}|hooks\.slack\.com/(services|workflows|triggers)/|AIza[0-9A-Za-z_-]{35}' . ; then
   echo "중단: 비밀값으로 보이는 문자열이 있습니다. 위 줄을 확인하세요." >&2
+  exit 1
+fi
+# 홈 경로 치환 뒤에도 남은 사용자 경로(다른 계정이나 다른 맥에서 붙여 넣은 경로)
+if grep -rnIE --exclude-dir=.git '/Users/[A-Za-z0-9._-]+' . ; then
+  echo "중단: 사용자 홈 경로가 남아 있습니다. 위 줄을 확인하세요." >&2
+  exit 1
+fi
+# 보이지 않는 문자, 방향 제어 문자(붙여 넣은 텍스트에 숨은 지시 대비)
+if ! python3 -I -c '
+import pathlib, re, sys
+bad = re.compile("[\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u2069\ufeff]")
+hit = 0
+for f in pathlib.Path(".").rglob("*"):
+    if ".git" in f.parts or not f.is_file():
+        continue
+    try:
+        lines = f.read_text().splitlines()
+    except (UnicodeDecodeError, OSError):
+        continue
+    for i, l in enumerate(lines, 1):
+        if bad.search(l):
+            print(f"{f}:{i}:", [hex(ord(c)) for c in bad.findall(l)])
+            hit = 1
+sys.exit(hit)
+'; then
+  echo "중단: 보이지 않는 문자가 있습니다. 위 줄을 확인하세요." >&2
   exit 1
 fi
 

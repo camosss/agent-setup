@@ -40,9 +40,10 @@ What `install.sh` does:
 1. Installs everything in the `Brewfile`
 2. Backs up existing settings as `<file>.bak.<timestamp>`
 3. Copies the settings into place
-4. Downloads the Herdr guides
-5. Registers the daily sync job
-6. Reloads Hammerspoon
+4. Installs the Herdr Claude integration hook (`herdr integration install claude`)
+5. Downloads the Herdr guides
+6. Registers the daily sync job
+7. Reloads Hammerspoon
 
 When it finishes, it prints the remaining manual steps:
 
@@ -59,9 +60,9 @@ When it finishes, it prints the remaining manual steps:
 
 | Path | Installed to | What it holds |
 |------|--------------|---------------|
-| [`claude/settings.json`](./claude/settings.json) | `~/.claude/settings.json` | Model, auto-compact window, transcript retention, blocked connectors, hooks, auto mode rules |
+| [`claude/settings.json`](./claude/settings.json) | `~/.claude/settings.json` | Model, auto-compact window, transcript retention, blocked connectors, hooks, auto mode rules, blocked secret paths |
 | [`claude/CLAUDE.md`](./claude/CLAUDE.md) | `~/.claude/CLAUDE.md` | Instructions for every session: reply language, what to keep when compacting, subagent use, work session lifecycle |
-| [`claude/hooks/`](./claude/hooks) | `~/.claude/hooks/` | Context cleanup reminders, completion notifications, Herdr tab markers, tab names that follow the Claude session title |
+| [`claude/hooks/`](./claude/hooks) | `~/.claude/hooks/` | Context cleanup reminders, completion notifications, Herdr tab markers, tab names that follow the Claude session title. The Herdr integration hook (`herdr-agent-state.sh`) is installed by Herdr, not by this repo |
 | [`claude/skills/dispatch-work-sessions/`](./claude/skills/dispatch-work-sessions) | `~/.claude/skills/` | Skill that lets a coordinator session open work sessions, send them instructions, and close them when the task is done |
 | [`hammerspoon/`](./hammerspoon) | `~/.hammerspoon/` | Silent notification banners that jump to the agent's pane on click, image paste shortcut |
 | [`herdr/`](./herdr) | `~/.config/herdr/` | Agent pane sorting, labels, session restore, jump to the last notified pane (`prefix+j`) |
@@ -97,6 +98,9 @@ If you are not looking at that pane, Hammerspoon shows a banner and Herdr marks 
 **Coordinator sessions**
 They open work sessions in a new tab of their own workspace (one workspace per project, one tab per stage) and send instructions. Tab names follow the Claude session title. After verifying a completion report (PR link, remaining work), they close the session. Sessions with uncommitted or unpushed changes are never closed.
 
+**Guardrails**
+`permissions.deny` keeps Claude from reading or editing SSH keys, AWS credentials, MySQL option files, the GitHub CLI token, `.netrc`, and `.env` files. Auto mode asks before skipping git hooks (`--no-verify`, `core.hooksPath`) or loosening lint, format, and type-check settings to get a check to pass.
+
 **Once a day**
 The current local settings are synced to this repo.
 
@@ -124,7 +128,9 @@ Settings are copied, not symlinked. Claude Code rewrites its settings file, whic
 
 1. Removes auto mode rules and plugin marketplaces that contain private words, telemetry values, and the listed `CLAUDE.md` blocks
 2. Replaces the listed names with generic ones
-3. Stops without committing if any private word or token-like string is still left
+3. Stops without committing if any private word or token-like string is still left (GitHub, Anthropic, Slack, Slack webhooks, AWS, Notion, Google API keys, private keys)
+4. Stops if a `/Users/<name>` path survives the `__HOME__` replacement
+5. Stops if any file contains invisible or bidirectional control characters
 
 `install.sh` reverses the name replacements when `private.json` is present, and keeps the private values already in your local settings.
 
@@ -135,3 +141,4 @@ Settings are copied, not symlinked. Claude Code rewrites its settings file, whic
 - Memory (`~/.claude/projects/*/memory`) and session transcripts
 - Work-specific skills and plugins, tokens, and credential files
 - Herdr guides (`~/.claude/agent-guides`)
+- The Herdr integration hook (`~/.claude/hooks/herdr-agent-state.sh`), which Herdr installs and updates itself

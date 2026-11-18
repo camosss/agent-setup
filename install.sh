@@ -78,6 +78,10 @@ PY
 else
   echo "참고: ~/.config/agent-setup/private.json 이 없어 일반 이름 그대로 설치했습니다(private.example.json 참고)."
 fi
+# Herdr 연동 훅(herdr-agent-state.sh)은 레포에 두지 않고 Herdr 가 설치한다
+if command -v herdr >/dev/null; then
+  herdr integration install claude && echo "설치: Herdr Claude 연동" || echo "참고: herdr integration install claude 실패. 손 작업에서 다시 실행하세요"
+fi
 chmod +x "$HOME"/.claude/hooks/*.sh "$HOME"/.claude/skills/dispatch-work-sessions/scripts/* 2>/dev/null || true
 
 # 3. 하루 한 번 자동 동기화
@@ -97,5 +101,5 @@ cat <<'EOF'
 2. 업무용 플러그인, 스킬, auto mode 환경 설명(autoMode.environment)은 레포에 없으니 따로 설치한다
 3. ~/.config/agent-setup/private.json 을 만든다(private.example.json 참고). sync.sh 가 이 파일 없이는 돌지 않는다
 4. Hammerspoon: 시스템 설정 > 개인정보 보호 및 보안 > 손쉬운 사용 허용 (Cmd+V 이미지 붙여넣기)
-5. Ghostty 를 열고 herdr 실행
+5. Ghostty 를 열고 herdr 실행(Claude 연동이 없으면 herdr integration install claude)
 EOF
