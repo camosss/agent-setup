@@ -2,7 +2,7 @@
 # 조율 세션과 같은 워크스페이스의 새 탭에 플랫폼별 Claude 작업 세션을 열고 지시를 넣는다. 끝난 세션은 닫는다
 #
 #   work-sessions open  --project 3872 --session server=~/Desktop/server-3872 \
-#                       --session ios=~/Desktop/ios-app-3872 [--stage qa] [--prompt-dir DIR]
+#                       --session ios=~/Desktop/ios-app-3872 [--stage qa] [--prompt-dir DIR] [--model opus]
 #   work-sessions close --project 3872 [--platform ios] [--stage qa] [--force]
 #   work-sessions list  [--project 3872]
 #
@@ -17,7 +17,7 @@ json() { python3 -c "import sys,json;d=json.load(sys.stdin);print($1)"; }
 command -v herdr >/dev/null || die "herdr 가 없습니다"
 
 cmd="${1:-}"; shift || true
-project=""; prompt_dir=""; herdr_session="${HERDR_TARGET_SESSION:-}"; specs=(); platform_only=""; stage=""; force=0
+project=""; prompt_dir=""; herdr_session="${HERDR_TARGET_SESSION:-}"; specs=(); platform_only=""; stage=""; force=0; model=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --project) project="$2"; shift 2 ;;
@@ -25,6 +25,7 @@ while [[ $# -gt 0 ]]; do
     --prompt-dir) prompt_dir="$2"; shift 2 ;;
     --platform) platform_only="$2"; shift 2 ;;
     --stage) stage="$2"; shift 2 ;;
+    --model) model="$2"; shift 2 ;;
     --force) force=1; shift ;;
     --herdr-session) herdr_session="$2"; shift 2 ;;
     *) die "모르는 인자: $1" ;;
@@ -104,7 +105,11 @@ open)
       new_pane=$(h pane split "$anchor" --direction "$direction" --cwd "$cwd" --no-focus | json 'd["result"]["pane"]["pane_id"]')
     fi
 
-    h agent start "$name" --kind claude --pane "$new_pane" --timeout 60000 >/dev/null
+    if [[ -n "$model" ]]; then
+      h agent start "$name" --kind claude --pane "$new_pane" --timeout 60000 -- --model "$model" >/dev/null
+    else
+      h agent start "$name" --kind claude --pane "$new_pane" --timeout 60000 >/dev/null
+    fi
     h pane rename "$new_pane" "$(title_of "$platform")" >/dev/null
     echo "열림: $name tab=$target_tab pane=$new_pane cwd=$cwd"
 

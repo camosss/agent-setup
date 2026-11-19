@@ -30,14 +30,14 @@ description: 조율 세션이 플랫폼별(서버, iOS, Android, Web) Claude 작
      --session server=~/Desktop/server-<N> \
      --session ios=~/Desktop/ios-app-<N> \
      --session android=~/Desktop/android-app-<N> \
-     [--stage qa] \
+     [--stage qa] [--model opus] \
      --prompt-dir <scratchpad 지시문 폴더>
    ```
    스크립트가 하는 일:
    - 현재 패널과 워크스페이스를 확인합니다. 워크스페이스 하나가 프로젝트 하나입니다.
    - 같은 프로젝트, 같은 단계의 세션이 이미 있는 탭이 있으면 그 탭에, 없으면 이 워크스페이스에 새 탭을 만들어 엽니다. 조율 세션의 탭에는 열지 않습니다.
    - 탭 안에서는 맨 오른쪽에 칸을 나눕니다. 4칸을 넘으면 아래로 나눕니다.
-   - `p<N>-<platform>` 이름으로 Claude 를 시작합니다. `--stage` 를 주면 `p<N>-<platform>-<stage>` 로 이름 짓고 그 단계 탭에 따로 모읍니다(개발은 생략, 검증은 `qa` 처럼).
+   - `p<N>-<platform>` 이름으로 Claude 를 시작합니다. 조사, 확인만 하는 세션은 `--model opus` 로 엽니다. `--stage` 를 주면 `p<N>-<platform>-<stage>` 로 이름 짓고 그 단계 탭에 따로 모읍니다(개발은 생략, 검증은 `qa` 처럼).
    - 패널 제목을 붙입니다. 이 세션은 `조율`로 붙입니다.
    - 탭 이름은 붙이지 않습니다. `herdr-tab-name.sh` 훅이 그 탭 왼쪽 위 세션의 제목으로 붙입니다.
    - 지시를 보냅니다.
