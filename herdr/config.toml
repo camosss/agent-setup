@@ -44,3 +44,7 @@ command = "p=$(cat ~/.claude/hooks/herdr-last-notified 2>/dev/null); [ -n \"$p\"
 [keys]
 switch_workspace = "prefix+shift+1..9"
 switch_tab = "prefix+1..9"
+
+[theme]
+name = "catppuccin"
+auto_switch = false
