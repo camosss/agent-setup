@@ -55,6 +55,18 @@
     }
   ],
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I '__HOME__/.claude/hooks/herdr-session-reuse-guard.py'",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "^(startup|resume|clear|compact|fork)$",
@@ -124,6 +136,11 @@
       }
     }
   },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "autoCompactWindow": 1000000
+    }
+  },
   "autoCompactWindow": 400000,
   "tui": "fullscreen",
   "theme": "auto",
@@ -140,10 +157,5 @@
       "Skipping git hooks: `git commit --no-verify` or `-n`, `git push --no-verify`, `-c core.hooksPath=...`, or env such as `HUSKY=0` / `SKIP=...` that disables pre-commit or pre-push checks",
       "Loosening lint, format, or type-check configuration so a check passes (editing .swiftlint.yml, ktlint/detekt/.editorconfig rules, ruff or other lint sections in pyproject.toml, eslint or tsconfig strictness, or adding file-wide disable comments) unless the user asked for that config change"
     ]
-  },
-  "modelSettings": {
-    "claude-opus-5-5": {
-      "autoCompactWindow": 1000000
-    }
   }
 }
