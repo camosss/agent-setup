@@ -27,7 +27,7 @@
       "Edit(**/.env.prod*)"
     ]
   },
-  "model": "opus",
+  "model": "fable",
   "deniedMcpServers": [
     {
       "serverName": "claude.ai Gmail"
